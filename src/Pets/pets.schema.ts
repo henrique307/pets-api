@@ -12,7 +12,8 @@ class Pet {
   nome: string;
 
   @Prop({
-    required:true
+    required:true,
+    default: "Não especificado"
   })
   idade: number;
 

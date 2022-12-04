@@ -6,10 +6,6 @@ class Pet_DTO {
     @Length(1, 20, {message:"nome precisa ter entre 1 e 20 caracteres"})
     nome: string;
 
-    @IsInt({message:"idade precisa ser um valor inteiro"})
-    idade: number;
-
-
 }
 
 export {Pet_DTO}
