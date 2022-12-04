@@ -3,18 +3,30 @@ import { HydratedDocument } from 'mongoose';
 
 @Schema()
 class Pet {
+
+  _id:Number
+
   @Prop({
     required: true,
   })
   nome: string;
 
-  @Prop()
+  @Prop({
+    required:true
+  })
   idade: number;
 
-  @Prop([String])
+  @Prop({
+    default: [],
+    type: [String],
+    required:false
+  })
   vacinas: string[];
 
-  @Prop()
+  @Prop({
+    default:"indefinido",
+    required:false
+  })
   raca: string;
 }
 

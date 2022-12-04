@@ -9,11 +9,6 @@ class Pet_DTO {
     @IsInt({message:"idade precisa ser um valor inteiro"})
     idade: number;
 
-    @IsArray()
-    vacinas: string[];
-
-    @IsString()
-    raca: string;
 
 }
 
