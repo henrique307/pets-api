@@ -1,34 +1,28 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 @Schema()
 class Pet {
 
   _id:Number
 
-  @Prop({
-    required: true,
-  })
+  @Prop()
   nome: string;
 
-  @Prop({
-    required:true,
-    default: 0
-  })
+  @Prop()
   idade: number;
 
-  @Prop({
-    default: [],
-    type: [String],
-    required:false
-  })
-  vacinas: string[];
+  @Prop()
+  vacinas: String[];
 
-  @Prop({
-    default:"indefinido",
-    required:false
-  })
+  @Prop()
   raca: string;
+  @Prop({
+    required: true,
+    ref:'donos',
+    type: mongoose.Schema.Types.ObjectId
+  })
+  dono: mongoose.Schema.Types.ObjectId;
 }
 
 type PetDocument = HydratedDocument<Pet>;

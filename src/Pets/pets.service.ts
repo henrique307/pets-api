@@ -1,35 +1,66 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Pet_DTO } from './pet.dto';
-import { Pet, PetDocument, PetSchema } from './pets.schema';
+import { Pet_DTO } from './dto/pet.dto';
+import { Pet, PetDocument } from './pets.schema';
 
 @Injectable()
 class petsService {
-  constructor(
-    @InjectModel(Pet.name) private readonly PetModel: Model<PetDocument>,
-  ) {}
+  constructor(@InjectModel(Pet.name) private readonly PetModel: Model<PetDocument>) {}
 
   async getPets(Query: object): Promise<Pet[] | Error> {
-    return this.PetModel.find(Query, '-idade -__v').exec();
+    const resultado = await this.PetModel.find(Query, '-__v')
+               .populate('dono', '-__v -pets -cep')
+               .exec();
+
+    if(!resultado) throw new Error("Usuário nao existe no banco de dados")
+
+    return resultado
   }
 
-  async getPet(id: string): Promise<Error | Pet> {
-    return this.PetModel.findById(id, '-idade -__v').exec();
+  async getPet(id: string): Promise<Pet | NotFoundException> {
+    const resultado = await this.PetModel.findById(id, '-__v')
+      .populate('dono', '-__v')
+      .exec();
+
+    if(!resultado) throw new NotFoundException("ID não existe no banco de dados")
+
+    return resultado
   }
 
-  async postPet(pet_DTO: Pet_DTO): Promise<Pet> {
-    const pet = new this.PetModel(pet_DTO);
+  async postPet(pet_DTO: Pet_DTO): Promise<object | Error> {
 
-    return pet.save();
+    const petCriado = new this.PetModel(pet_DTO);
+
+    const resultado = await petCriado.save();
+
+    if(!resultado) {
+      throw new Error("Não foi possivel criar o pet no banco de dados, tente novamente mais tarde")
+    }
+
+    delete resultado.__v
+
+    return {message: "Pet criado com sucesso!", obj: resultado}
   }
 
-  async putPet(changes: object, id: string) {
-    return this.PetModel.findByIdAndUpdate(id, changes).exec();
+  async putPet(id:string, changes: Pet_DTO):Promise<NotFoundException | object> {
+    const resultado = await this.PetModel.findByIdAndUpdate(id, changes).exec()
+
+    if(!resultado) throw new NotFoundException("ID não existe no banco de dados");
+
+    return {message: "Pet modificado com sucesso!", mudancas: resultado.overwrite(changes)}
   }
 
-  async deletePet(id: string) {
-    return this.PetModel.findByIdAndDelete(id).exec();
+  async deletePet(id: string):Promise<object | NotFoundException> {
+    const resultado = await this.PetModel.findByIdAndDelete(id).exec();
+
+    if(!resultado) throw new NotFoundException("ID não existe no banco de dados");
+
+    return {message:"Pet deletado do banco com sucesso!"}
+  }
+
+  async deletaTudo() {
+    return await this.PetModel.deleteMany({}).exec()
   }
 }
 
