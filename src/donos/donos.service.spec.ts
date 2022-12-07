@@ -1,6 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Model } from 'mongoose';
-import { donoDocument } from './donos.schema';
 import { DonosService } from './donos.service';
 
 describe('DonosService', () => {

@@ -7,8 +7,8 @@ import { DonosModule } from './donos/donos.module';
 
 @Module({
   imports: [
-    petsModule,
     mongoConnection(),
+    petsModule,
     DonosModule,
   ],
   controllers: [AppController],
