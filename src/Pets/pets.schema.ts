@@ -4,8 +4,6 @@ import mongoose, { HydratedDocument } from 'mongoose';
 @Schema()
 class Pet {
 
-  _id:Number
-
   @Prop()
   nome: string;
 
@@ -17,12 +15,13 @@ class Pet {
 
   @Prop()
   raca: string;
-  @Prop({
-    required: true,
-    ref:'donos',
-    type: mongoose.Schema.Types.ObjectId
-  })
-  dono: mongoose.Schema.Types.ObjectId;
+
+  // @Prop({
+  //   ref:'donos',
+  //   type: mongoose.Schema.Types.ObjectId
+  // })
+  // donoID: mongoose.Schema.Types.ObjectId;
+  
 }
 
 type PetDocument = HydratedDocument<Pet>;

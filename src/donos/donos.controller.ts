@@ -6,19 +6,19 @@ import { DonoDto } from './dto/dono.dto';
 export class DonosController {
   constructor(private readonly donosService: DonosService) {}
 
-  @Post()
-  create(@Body() createDonoDto: DonoDto):Promise<NotFoundException | object> {
-    return this.donosService.criarDono(createDonoDto);
-  }
-
   @Get()
   findAll(@Query() query:object):Promise<NotFoundException | object> {
     return this.donosService.findAllTemp(query);
   }
-
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.donosService.findOne(id);
+    return this.donosService.findOne({id});
+  }
+
+  @Post()
+  create(@Body() createDonoDto: DonoDto):Promise<Error | object> {
+    return this.donosService.criarDono(createDonoDto);
   }
 
   @Patch(':id')
@@ -29,5 +29,10 @@ export class DonosController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.donosService.remove(id);
+  }
+
+  @Delete()
+  removeAll() {
+    return this.donosService.removeAll();
   }
 }

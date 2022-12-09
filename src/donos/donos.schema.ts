@@ -1,27 +1,22 @@
-import { Prop, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import mongoose, { HydratedDocument, Model } from "mongoose";
 import { Pet_DTO } from "src/Pets/dto/pet.dto";
 
+@Schema()
 class dono {
-    @Prop({
-        required: true,
-    })
+    @Prop()
     nome:string
 
-    @Prop({
-        required:true
-    })
+    @Prop()
     cep: string
 
     @Prop({
-        required:true
+        unique:true
     })
     email:string
 
-    @Prop({
-        required:true
-    })
-    password:string
+    @Prop()
+    senha:string
 
     @Prop()
     pets: Pet_DTO[]

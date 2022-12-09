@@ -1,19 +1,21 @@
 import { IsEmail, IsString, Length, Matches } from "class-validator";
+import { Existe } from "src/validators/existeValidator";
 
 class DonoDto {
-    @IsString()
+    @IsString({message: "campo nome precisa ser da tipo string"})
     @Length(5, 20, {message:"nome deve ter entre 5 e 20 caracteres"})
-    nome: string;
+    readonly nome: string;
 
     @IsEmail({message: "Email inválido"})
-    email: string;
+    @Existe()
+    readonly email: string;
 
-    @Matches(/d{5}-d{3}/, {message: "cep inválido, o padrão deve ser xxxxx-xxx"})
-    cep: string;
+    @Matches(/^[0-9]{5}-[0-9]{3}$/, {message: "cep inválido, o padrão deve ser xxxxx-xxx"})
+    readonly cep: string;
 
-    @IsString()
+    @IsString({message: "campo senha precisa ser da tipo string"})
     @Length(10, 50, {message: "Sua senha deve ter entre 10 e 50 caracteres"})
-    password:string;
+    readonly senha:string;
 }
 
 export {DonoDto}

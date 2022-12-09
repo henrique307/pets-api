@@ -4,12 +4,18 @@ import { DonosService } from './donos.service';
 
 describe('DonosController', () => {
   let controller: DonosController;
+  const mockDonosService = {
+
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DonosController],
       providers: [DonosService],
-    }).compile();
+    })
+    .overrideProvider(DonosService)
+    .useValue(mockDonosService)
+    .compile();
 
     controller = module.get<DonosController>(DonosController);
   });

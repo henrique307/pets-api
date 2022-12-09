@@ -38,12 +38,11 @@ class petsService {
       throw new Error("Não foi possivel criar o pet no banco de dados, tente novamente mais tarde")
     }
 
-    delete resultado.__v
-
-    return {message: "Pet criado com sucesso!", obj: resultado}
+    return {message: "Pet criado com sucesso!"}
   }
 
   async putPet(id:string, changes: Pet_DTO):Promise<NotFoundException | object> {
+    
     const resultado = await this.PetModel.findByIdAndUpdate(id, changes).exec()
 
     if(!resultado) throw new NotFoundException("ID não existe no banco de dados");

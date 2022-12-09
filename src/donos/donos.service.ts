@@ -7,32 +7,35 @@ import { DonoDto } from './dto/dono.dto';
 @Injectable()
 export class DonosService {
 
-  constructor(@InjectModel(dono.name) public donoModel: Model<donoDocument> ) {}
+  constructor(@InjectModel(dono.name) private readonly donoModel: Model<donoDocument> ) {}
 
   async findAllTemp(Query:object):Promise<dono[] | Error> {
-    const resultado = await this.donoModel.find(Query, '-__v').exec()
+
+    const resultado = await this.donoModel.find(Query, '-__v -senha').exec()
 
     if(!resultado) throw new Error("Não sei o que aconteceu... tenta de novo mais tarde =)")
 
     return resultado
   }
   
-  async findOne(id: string):Promise<dono | NotFoundException> {
-    const resultado = await this.donoModel.findById(id, '-__v -password').exec()
+  async findOne(query: object):Promise<dono | NotFoundException> {
+    const resultado = await this.donoModel.findOne(query, '-__v -senha').exec()
 
     if(!resultado) throw new NotFoundException("Usuário não existe no banco de dados")
 
     return resultado
   }
 
-  async criarDono(dono_DTO:DonoDto):Promise<object | NotFoundException> { 
+  async criarDono(dono_DTO:DonoDto):Promise<object | Error> { 
+
     const novoDono = new this.donoModel(dono_DTO)
 
     const resultado = await novoDono.save()
 
     if(!resultado) throw new Error("Não sei o que aconteceu... tenta de novo mais tarde =)")
 
-    return {message: "Usuário criado com sucesso!", usuario: resultado}
+    return {message: "Usuário criado com sucesso!"}
+
   } 
 
   async update(id: string, mudancas:DonoDto):Promise<object | NotFoundException> {
@@ -49,6 +52,10 @@ export class DonosService {
     if(!resultado) throw new NotFoundException("Usuário nao existe no banco de dados")
 
     return {message:"usuário deletado com sucesso!"}
+  }
+
+  async removeAll(): Promise<object> {
+    return await this.donoModel.deleteMany({}).exec()
   }
 
 }
